@@ -57,8 +57,14 @@ def grafico_pizza_modo(df: pd.DataFrame):
     Dica: ax.pie(valores, labels=rotulos, autopct='%1.1f%%').
     """
     # TODO: implemente
-    
-
+    modo_counts = df['mode'].value_counts()
+    fig, ax = plt.subplots()
+    ax.pie(
+        modo_counts.values, 
+        labels=modo_counts.index, 
+        autopct='%1.1f%%')
+    ax.set_title('Proporção de Músicas por modo')
+    return fig
 
 
 def grafico_linha_lancamentos_por_ano(df: pd.DataFrame):
@@ -66,7 +72,13 @@ def grafico_linha_lancamentos_por_ano(df: pd.DataFrame):
     Linha com a quantidade de lancamentos por ano (>= 2000).
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao grafico_linha_lancamentos_por_ano ainda nao implementada (aula 4)")
+    lancamentos_ano = df[df['released_year'] >= 2000].groupby('released_year').size()
+    fig, ax = plt.subplots()
+    ax.plot(lancamentos_ano.index, lancamentos_ano.values, marker='o')
+    ax.set_title('Lançamentos por Ano')
+    ax.set_xlabel('Ano')
+    ax.set_ylabel('Quantidade de Lançamentos')
+    return fig
 
 
 def juntar_com_info_artistas(df_spotify: pd.DataFrame, df_info: pd.DataFrame) -> pd.DataFrame:
@@ -76,7 +88,13 @@ def juntar_com_info_artistas(df_spotify: pd.DataFrame, df_info: pd.DataFrame) ->
     Use how='left' para nao perder musicas.
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao juntar_com_info_artistas ainda nao implementada (aula 4)")
+    return pd.merge(
+        df_spotify, 
+        df_info, 
+        left_on='artist(s)_name', 
+        right_on='artist_name', 
+        how='left'
+    )
 
 
 def unir_novos_lancamentos(df_atual: pd.DataFrame, df_novos: pd.DataFrame) -> pd.DataFrame:
@@ -84,7 +102,8 @@ def unir_novos_lancamentos(df_atual: pd.DataFrame, df_novos: pd.DataFrame) -> pd
     CONCAT vertical (axis=0) entre df_atual e df_novos. Depois drop_duplicates.
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao unir_novos_lancamentos ainda nao implementada (aula 4)")
+    df_unido = pd.concat([df_atual, df_novos], axis=0)
+    return df_unido.drop_duplicates()
 
 
 def salvar_resultado(df: pd.DataFrame, caminho: str) -> None:
@@ -92,7 +111,7 @@ def salvar_resultado(df: pd.DataFrame, caminho: str) -> None:
     Salva o DataFrame em CSV no caminho informado, sem indice e encoding utf-8.
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao salvar_resultado ainda nao implementada (aula 4)")
+    df.to_csv(caminho, index=False, encoding='utf-8')
 
 
 def grafico_dispersao_energia_dancabilidade(df: pd.DataFrame):
@@ -106,7 +125,12 @@ def grafico_dispersao_energia_dancabilidade(df: pd.DataFrame):
       4) Retornar fig
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao grafico_dispersao_energia_dancabilidade ainda nao implementada (aula 4)")
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.scatter(df['energy_%'], df['danceability_%'], alpha=0.5)
+    ax.set_title('Dispersão: Energia vs. Dançabilidade')
+    ax.set_xlabel('Energia (%)')
+    ax.set_ylabel('Dançabilidade (%)')
+    return fig
 
 
 def grafico_histograma_bpm(df: pd.DataFrame, bins: int = 30):
@@ -120,7 +144,12 @@ def grafico_histograma_bpm(df: pd.DataFrame, bins: int = 30):
       4) Retornar fig
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao grafico_histograma_bpm ainda nao implementada (aula 4)")
+    fig, ax = plt.subplots()
+    ax.hist(df['bpm'], bins=bins)
+    ax.set_title('Histograma do BPM')
+    ax.set_xlabel('BPM')
+    ax.set_ylabel('Frequência')
+    return fig
 
 
 def salvar_em_excel(df: pd.DataFrame, caminho: str) -> None:
@@ -132,7 +161,7 @@ def salvar_em_excel(df: pd.DataFrame, caminho: str) -> None:
     instalado (ja esta no requirements.txt).
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao salvar_em_excel ainda nao implementada (aula 4)")
+    df.to_excel(caminho, index=False)
 
 
 def preparar_csv_para_download(df: pd.DataFrame) -> bytes:
@@ -153,4 +182,5 @@ def preparar_csv_para_download(df: pd.DataFrame) -> bytes:
       st.download_button("Baixar", bytes_csv, "dados.csv", "text/csv")
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao preparar_csv_para_download ainda nao implementada (aula 4)")
+    csv_string = df.to_csv(index=False)
+    return csv_string.encode('utf-8')
