@@ -23,7 +23,31 @@ def grafico_barras_top_artistas(df: pd.DataFrame, n: int = 10):
     Dica: ax.barh(...). Retorne fig (sem plt.show()).
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao grafico_barras_top_artistas ainda nao implementada (aula 4)")
+    top_artistas = (
+        df.groupby('artist(s)_name')['streams']
+          .sum()
+          .sort_values(ascending=False)
+          .head(n)
+    )
+
+    fig, ax = plt.subplots()
+
+    ax.barh(
+        top_artistas.index,
+        top_artistas.values
+    )
+
+    ax.set_title(
+        f'Top {n} artistas por streams'
+    )
+
+    ax.set_xlabel('Streams')
+    ax.set_ylabel('Artista')
+
+    ax.invert_yaxis()
+
+    return fig
+
 
 
 def grafico_pizza_modo(df: pd.DataFrame):
@@ -33,7 +57,8 @@ def grafico_pizza_modo(df: pd.DataFrame):
     Dica: ax.pie(valores, labels=rotulos, autopct='%1.1f%%').
     """
     # TODO: implemente
-    raise NotImplementedError("Funcao grafico_pizza_modo ainda nao implementada (aula 4)")
+    
+
 
 
 def grafico_linha_lancamentos_por_ano(df: pd.DataFrame):
